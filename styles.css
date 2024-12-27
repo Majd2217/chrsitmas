@@ -1,0 +1,21 @@
+.memory {
+    width: 200px;
+    height: 200px;
+    background-color: #ffffff1a;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    overflow: hidden;  /* Keep this to prevent any overflow */
+    padding: 0;       /* Remove padding */
+}
+
+.memory img {
+    width: 100%;      /* Make image take full width */
+    height: 100%;     /* Make image take full height */
+    border-radius: 10px;
+    object-fit: cover; /* This ensures the image covers the entire container */
+    object-position: center;
+}

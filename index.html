@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas, My Love!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #FFB6C1;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .section {
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+        h1, h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .gift {
+            font-size: 4em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .gift:hover {
+            transform: scale(1.1);
+        }
+        .message {
+            font-size: 1.2em;
+            margin-top: 20px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .heart {
+            color: #ff6b6b;
+            font-size: 1.5em;
+        }
+        .snowflake {
+            position: fixed;
+            color: #fff;
+            font-size: 1em;
+            user-select: none;
+            z-index: 1000;
+        }
+        .memory-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .memory {
+            width: 200px;
+            height: 200px;
+            background-color: #ffffff1a;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .memory:hover {
+            transform: scale(1.05);
+        }
+        .memory img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        #countdown {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: firework 1s ease-out;
+        }
+        
+        @keyframes firework {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        .gallery-container {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+        .gallery-slide.active {
+            opacity: 1;
+        }
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .gallery-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .gallery-nav button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .gallery-nav button:hover {
+            background-color: #ff4757;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1>Merry Christmas, My Love!</h1>
+        <div class="gift" id="gift">🎁</div>
+        <div class="message" id="message">
+            I wish we could be together.<br>
+            I love you! <span class="heart">❤️</span><br>
+            You're the Best Gift I Could Ask For!
+        </div>
+    </div>
+
+    <div class="section">
+        <h2> Memories</h2>
+        <div class="memory-container">
+            <div class="memory"><img src="Misha1.JPG" alt="Memory 1"></div>
+            <div class="memory"><img src="Misha2.JPG" alt="Memory 2"></div>
+            <div class="memory"><img src="Misha3.JPG" alt="Memory 3"></div>
+            <div class="memory"><img src="Misha4.JPG" alt="Memory 4"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Countdown Until I See You Again</h2>
+        <div id="countdown"></div>
+    </div>
+
+    <div class="section">
+        <h2> Photo Gallery</h2>
+        <div class="gallery-container" id="gallery">
+            <!-- Slides will be dynamically added here -->
+        </div>
+        <div class="gallery-nav">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Falling snow effect
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            
+            document.body.appendChild(snowflake);
+            
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        setInterval(createSnowflake, 50);
+
+        // Gift click effect
+        const gift = document.getElementById('gift');
+        const message = document.getElementById('message');
+        let isOpen = false;
+
+        gift.addEventListener('click', () => {
+            if (!isOpen) {
+                gift.innerHTML = '🎄';
+                gift.style.fontSize = '5em';
+                message.style.opacity = '1';
+                isOpen = true;
+            } else {
+                gift.innerHTML = '🎁';
+                gift.style.fontSize = '4em';
+                message.style.opacity = '0';
+                isOpen = false;
+            }
+        });
+
+        // Memory click effect
+        document.querySelectorAll('.memory').forEach(memory => {
+            memory.addEventListener('click', () => {
+                createFireworks(memory);
+            });
+        });
+
+        function createFireworks(element) {
+            for (let i = 0; i < 30; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.left = `${Math.random() * 200}px`;
+                firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                element.appendChild(firework);
+                setTimeout(() => firework.remove(), 1000);
+            }
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date();
+            const targetDate = new Date(now.getFullYear() + 1, 0, 12); // January 12, 2025
+            const diff = targetDate - now;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        setInterval(updateCountdown, 1000);
+
+      
+         // Photo Gallery Slideshow
+         const galleryData = [
+    { url: 'Misha5.JPG', caption: 'I Love This Picture' },
+    { url: 'Misha6.JPG', caption: 'Locked in Factory' },
+    { url: 'Misha7.JPG', caption: 'First Time I Visited Last Summer' },
+    { url: 'Misha8.JPG', caption: 'Best Gift Ive Ever Got' }
+];
+
+        let currentSlide = 0;
+        const gallery = document.getElementById('gallery');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function createSlides() {
+            galleryData.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.className = `gallery-slide ${index === 0 ? 'active' : ''}`;
+                slideElement.style.backgroundImage = `url(${slide.url})`;
+                
+                const caption = document.createElement('div');
+                caption.className = 'gallery-caption';
+                caption.textContent = slide.caption;
+                
+                slideElement.appendChild(caption);
+                gallery.appendChild(slideElement);
+            });
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.gallery-slide');
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        createSlides();
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Auto-advance slides every 5 seconds
+        setInterval(nextSlide, 5000);
+    </script>
+</body>
+</html>
